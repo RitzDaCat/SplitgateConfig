@@ -24,6 +24,7 @@ This repository contains configuration files for Splitgate to enhance your gamin
 - `userinput.ini`: Contains user input configurations
 - `userengine.ini`: Contains engine-related settings
 - `experimental_userengine.ini`: Experimental settings (rename to `userengine.ini` to use)
+- - `userengine_insanity+++`: VERY Experimental & WEIRD settings (rename to `userengine.ini` to use)
 
 ## Usage
 
