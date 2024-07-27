@@ -1,0 +1,59 @@
+[systemSettings]
+
+; CORE LATENCY CHANGES 
+r.OneFrameThreadLag=0 ; no lagging behind by 1 thread
+r.FinishCurrentFrame=1 ; better latency but lower throughput
+RHI.MaximumFrameLatency=1 ; max 1 frame latency
+d3d12.MaximumFrameLatency=1 ; max 1 frame latency
+r.TextureStreaming=0 ; no streaming to prevent stutters
+r.PostProcessing.ForceAsyncDispatch=1
+r.PostProcessing.PreferCompute=1
+r.ShaderPipelineCache.BatchSize=1
+r.ParallelShadowsNonWholeScene=1
+; CHANGES IMPACTING QUALITY OF GRAPHICS
+r.ReflectionCaptureResolution=64 ; worse reflections 
+r.Shadow.MaxResolution=256 ; lower shadows
+r.ViewDistanceScale=.001 ; cuts out background BS
+r.Fog=0 ; no grey filter
+r.AllowLandscapeShadows-=0 ; no landscape shadows
+r.AllowSimpleLights=0
+r.BloomQuality=0
+r.ToneMapperFilm=0
+r.ToneMapper.Quality=0
+r.TranslucentLightingVolume=0
+r.SupportAllShaderPermutations=0
+r.supportAtmosphericFog=0
+r.SupportPointLightWholeSceneShadows=0
+r.SupportskyAtmosphere=0
+r.SupportskyAtmosphereAffectsHeightFog=0
+R.SupportStationarySkylight=0
+FX.MaxCPUParticlesPerEmitter=100
+FX.MaxGPUParticlesSpawnedPerFrame=512
+r.EyeAdaptionQuality=0
+; CHARACTER MOVEMENT
+a.URO.DisableInterpolation=1
+a.URO.Enable=0
+p.NetEnableMoveCombining=0
+; AUDIO
+au.DisableOcclusion=1
+r.DefaultFeature.AntiAliasing=0
+; NETWORK
+net.UseAdaptiveNetUpdateFrequency=1
+net.UseRecvMulti=1
+net.DisableBandwithThrottling=1
+net.RecvMultiCapacity=4096
+
+; COLOR
+r.Color.Mid = .7 ; slightly brighter
+r.Color.Max=1.1 ; slightly brighter
+; EVIL?
+p.NetPingLimit=200 ; kicks high ping players ayo
+
+[/Script/Engine.UserInterfaceSettings]
+ApplicationScale=.85 ; smaller crosshair and text names
+
+[/Script/Engine.LocalPlayer]
+AspectRatioAxisConstraint=AspectRatio_MaintainYFOV ; FOV scale experiment
+
+[Core.Log]
+LogStreamingRender=Error ; Less log IO
