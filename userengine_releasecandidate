@@ -29,6 +29,10 @@ R.SupportStationarySkylight=0
 FX.MaxCPUParticlesPerEmitter=100
 FX.MaxGPUParticlesSpawnedPerFrame=512
 r.EyeAdaptionQuality=0
+r.LightShaftDownSampleFactor=4
+r.HZBOcclusion=1
+r.EarlyZPass=2
+r.GTSyncType=2
 ; CHARACTER MOVEMENT
 a.URO.DisableInterpolation=1
 a.URO.Enable=1
