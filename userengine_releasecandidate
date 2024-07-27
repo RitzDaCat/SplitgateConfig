@@ -9,15 +9,18 @@ r.PostProcessing.ForceAsyncDispatch=1
 r.PostProcessing.PreferCompute=1
 r.ShaderPipelineCache.BatchSize=1
 r.ParallelShadowsNonWholeScene=1
-; CHANGES IMPACTING QUALITY OF GRAPHICS
+; BETTER GRAPHICS?!
+r.BloomQuality=4 ; railgun and lights
+r.Bloom.Cross=3 ; Lights are brighter at source, looks just really cool lol
+r.ToneMapperFilm=1 ; better color depth
+r.Bloom.HalfResolutionFFT=1
+; REDUCE VISUAL FIDELITY FOR PERFORMANCE
 r.ReflectionCaptureResolution=64 ; worse reflections 
 r.Shadow.MaxResolution=256 ; lower shadows
 r.ViewDistanceScale=.001 ; cuts out background BS
 r.Fog=0 ; no grey filter
 r.AllowLandscapeShadows-=0 ; no landscape shadows
 r.AllowSimpleLights=0
-r.BloomQuality=0
-r.ToneMapperFilm=0
 r.ToneMapper.Quality=0
 r.TranslucentLightingVolume=0
 r.SupportAllShaderPermutations=0
@@ -33,6 +36,12 @@ r.LightShaftDownSampleFactor=4
 r.HZBOcclusion=1
 r.EarlyZPass=2
 r.GTSyncType=2
+rhi.SyncSlackMS=0
+r.ScreenPercentage=75
+r.TemporalAA.Upsampling=1
+r.DynamicRes.OperationMode=1
+r.DynamicRes.MinScreenPercentage=75
+r.DynamicRes.MaxScreenPercentage=100
 ; CHARACTER MOVEMENT
 a.URO.DisableInterpolation=1
 a.URO.Enable=1
