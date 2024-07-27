@@ -39,9 +39,9 @@ au.DisableOcclusion=1
 r.DefaultFeature.AntiAliasing=0
 ; NETWORK
 net.UseAdaptiveNetUpdateFrequency=1
-net.UseRecvMulti=1
+;net.UseRecvMulti=1
 net.DisableBandwithThrottling=1
-net.RecvMultiCapacity=4096
+;net.RecvMultiCapacity=2048
 
 ; COLOR
 r.Color.Mid = .7 ; slightly brighter
