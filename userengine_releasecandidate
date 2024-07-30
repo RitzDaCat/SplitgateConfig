@@ -1,4 +1,5 @@
 [systemSettings]
+; VERSION 7/30/2024
 ; CORE LATENCY CHANGES 
 r.OneFrameThreadLag=0 ; no lagging behind by 1 thread
 r.FinishCurrentFrame=1 ; better latency but lower throughput
@@ -9,14 +10,20 @@ r.PostProcessing.ForceAsyncDispatch=1
 r.PostProcessing.PreferCompute=1
 r.ShaderPipelineCache.BatchSize=1
 r.ParallelShadowsNonWholeScene=1
+FX.BatchAsync=1
+FX.EarlyScheduleAsync=1
+r.RDG.AsyncCompute=2
+tick.AllowAsyncTickDispatch=1
+r.D3D12.ExecuteCommandListTask=1
 ; BETTER GRAPHICS?!
-r.BloomQuality=4 ; railgun and lights
-r.Bloom.Cross=3 ; Lights are brighter at source, looks just really cool lol
+r.BloomQuality=0 ; railgun and lights
+r.Bloom.Cross=0 ; Lights are brighter at source, looks just really cool lol
 r.ToneMapperFilm=1 ; better color depth
 r.Bloom.HalfResolutionFFT=1
+r.MipMapLodBias=1
 ; REDUCE VISUAL FIDELITY FOR PERFORMANCE
-r.ReflectionCaptureResolution=64 ; worse reflections 
-r.Shadow.MaxResolution=256 ; lower shadows
+r.ReflectionCaptureResolution=32 ; worse reflections 
+r.Shadow.MaxResolution=64 ; lower shadows
 r.ViewDistanceScale=.001 ; cuts out background BS
 r.Fog=0 ; no grey filter
 r.AllowLandscapeShadows-=0 ; no landscape shadows
@@ -32,30 +39,48 @@ R.SupportStationarySkylight=0
 FX.MaxCPUParticlesPerEmitter=100
 FX.MaxGPUParticlesSpawnedPerFrame=512
 r.EyeAdaptionQuality=0
-r.LightShaftDownSampleFactor=4
+r.LightShaftDownSampleFactor=8
 r.HZBOcclusion=1
 r.EarlyZPass=2
 r.GTSyncType=2
 rhi.SyncSlackMS=0
+r.DFShadowQuality=0
+FX.Niagara.QualityLevel=0
+r.Water.Enabled=0
+r.Water.SingleLayer.Reflection=0
+r.ParticleLightQuality=0 ; default was 2
 ; CHARACTER MOVEMENT
-a.URO.DisableInterpolation=1
+;a.URO.DisableInterpolation=1
 a.URO.Enable=1
-;p.NetEnableMoveCombining=0
+; p.NetEnableMoveCombining=0 breaks jumping
 ; AUDIO
 au.DisableOcclusion=1
 r.DefaultFeature.AntiAliasing=0
 ; NETWORK
+;net.AllowAsyncLoading=1 ; breaks custom games
+net.IpConnectionUseSendTasks=1 ;decouples networking from the main thread for better multicore
+net.IpNetDriverUseReceiveThread=1 ; decouples networking receive
+;net.ProcessQueuedBunchesMillisecondLimit=10 ; default was 30ms lets cut down to 10ms
+;net.IpNetDriverReceiveThreadPollTimeMS=5 ; was 250 reduces polling interval for receive thread
 net.UseAdaptiveNetUpdateFrequency=1
-net.UseRecvMulti=1
+;net.UseRecvMulti=1 ; adds latency
 net.DisableBandwithThrottling=1
 net.RecvMultiCapacity=4096
 
 ; COLOR
-r.Color.Mid = .7 ; slightly brighter
-r.Color.Max=1.1 ; slightly brighter
+r.Color.Mid = .5 ; slightly brighter
+
+[Core.System]
+;MaxWorkerThreads=8 ; can we allow more cores to do work?
 
 [/Script/Engine.LocalPlayer]
 ;AspectRatioAxisConstraint=AspectRatio_MaintainYFOV ; FOV scale experiment
 
+[/Script/Engine.GarbageCollectionSettings]
+gc.CreateGCClusters=1 ; Enable creation of GC clusters for better parallelism
+gc.ActorClusteringEnabled=1 ; Enable actor clustering for GC
+gc.BlueprintClusteringEnabled=1 ; Enable blueprint clustering for GC
+
 [Core.Log]
 LogStreamingRender=Error ; Less log IO
+LogSpawn=Warning; reduce log spam?
