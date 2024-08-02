@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft Pick Visualizer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .input-section, .color-settings, .search-section {
+            margin-bottom: 20px;
+        }
+        .draft-area {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .captain-column {
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .captain-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+        }
+        .captain-info {
+            flex-grow: 1;
+        }
+        .captain-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .captain-title {
+            font-size: 0.8em;
+            color: #666;
+        }
+        .player-list {
+            min-height: 200px;
+            padding: 10px;
+            flex-grow: 1;
+        }
+        .player-item {
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .player-info {
+            flex-grow: 1;
+        }
+        .player-name {
+            font-weight: bold;
+        }
+        .player-title {
+            font-size: 0.8em;
+            color: #666;
+        }
+        .remove-button {
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+        }
+        .action-buttons {
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            margin-right: 10px;
+        }
+        .color-rule {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+        }
+        .color-rule-text {
+            flex-grow: 1;
+        }
+        .color-sample {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+        #colorRuleInput {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Draft Pick Visualizer</h1>
+    
+    <div class="input-section">
+        <h2>Add Captains</h2>
+        <input type="text" id="captainNameInput" placeholder="Enter captain name">
+        <input type="text" id="captainTitleInput" placeholder="Enter captain title (optional)">
+        <button onclick="addCaptain()">Add Captain</button>
+    </div>
+
+    <div class="input-section">
+        <h2>Add Players</h2>
+        <input type="text" id="playerNameInput" placeholder="Enter player name">
+        <input type="text" id="playerTitleInput" placeholder="Enter player title (optional)">
+        <button onclick="addPlayer()">Add Player</button>
+    </div>
+
+    <div class="color-settings">
+        <h2>Color Settings</h2>
+        <div id="colorRuleInput">
+            <input type="text" id="keywordInput" placeholder="Enter keyword">
+            <input type="color" id="colorInput">
+            <button onclick="addColorRule()">Add Rule</button>
+        </div>
+        <div id="colorRules"></div>
+    </div>
+
+    <div class="search-section">
+        <h2>Search Players</h2>
+        <input type="text" id="searchInput" placeholder="Search players...">
+    </div>
+
+    <div class="draft-area" id="draftArea">
+        <div class="captain-column">
+            <div class="captain-header">
+                <h3>Player Pool</h3>
+            </div>
+            <div id="playerPool" class="player-list"></div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button onclick="clearTeams()">Clear Teams</button>
+    </div>
+
+    <script>
+        const DEFAULT_PLAYER_COLOR = '#f0f0f0';
+
+        function addCaptain() {
+            const captainNameInput = document.getElementById('captainNameInput');
+            const captainTitleInput = document.getElementById('captainTitleInput');
+            const captainName = captainNameInput.value.trim();
+            const captainTitle = captainTitleInput.value.trim();
+            
+            if (captainName) {
+                const draftArea = document.getElementById('draftArea');
+                const captainColumn = document.createElement('div');
+                captainColumn.className = 'captain-column';
+                captainColumn.innerHTML = `
+                    <div class="captain-header">
+                        <div class="captain-info">
+                            <div class="captain-name">${captainName}</div>
+                            ${captainTitle ? `<div class="captain-title">${captainTitle}</div>` : ''}
+                        </div>
+                        <span class="remove-button" onclick="removeCaptain(this)">X</span>
+                    </div>
+                    <div class="player-list"></div>
+                `;
+                draftArea.appendChild(captainColumn);
+                captainNameInput.value = '';
+                captainTitleInput.value = '';
+                
+                new Sortable(captainColumn.querySelector('.player-list'), {
+                    group: 'shared',
+                    animation: 150
+                });
+            }
+        }
+
+        function addPlayer() {
+            const playerNameInput = document.getElementById('playerNameInput');
+            const playerTitleInput = document.getElementById('playerTitleInput');
+            const playerName = playerNameInput.value.trim();
+            const playerTitle = playerTitleInput.value.trim();
+            
+            if (playerName) {
+                const playerPool = document.getElementById('playerPool');
+                const playerItem = createPlayerItem(playerName, playerTitle);
+                playerPool.appendChild(playerItem);
+                playerNameInput.value = '';
+                playerTitleInput.value = '';
+                applyColorRules();
+            }
+        }
+
+        function createPlayerItem(playerName, playerTitle) {
+            const playerItem = document.createElement('div');
+            playerItem.className = 'player-item';
+            playerItem.style.backgroundColor = DEFAULT_PLAYER_COLOR;
+            playerItem.innerHTML = `
+                <div class="player-info">
+                    <span class="player-name">${playerName}</span>
+                    ${playerTitle ? `<div class="player-title">${playerTitle}</div>` : ''}
+                </div>
+                <span class="remove-button" onclick="removePlayer(this)">X</span>
+            `;
+            return playerItem;
+        }
+
+        function removePlayer(element) {
+            element.closest('.player-item').remove();
+        }
+
+        function removeCaptain(element) {
+            const captainColumn = element.closest('.captain-column');
+            const playerPool = document.getElementById('playerPool');
+            const players = captainColumn.querySelectorAll('.player-item');
+            players.forEach(player => {
+                playerPool.appendChild(player);
+            });
+            captainColumn.remove();
+        }
+
+        function clearTeams() {
+            const playerPool = document.getElementById('playerPool');
+            const captainColumns = document.querySelectorAll('.captain-column:not(:first-child)');
+            
+            captainColumns.forEach(column => {
+                const players = column.querySelectorAll('.player-item');
+                players.forEach(player => {
+                    playerPool.appendChild(player);
+                });
+            });
+        }
+
+        function addColorRule() {
+            const keywordInput = document.getElementById('keywordInput');
+            const colorInput = document.getElementById('colorInput');
+            const keyword = keywordInput.value.trim();
+            const color = colorInput.value;
+
+            if (keyword) {
+                const colorRules = document.getElementById('colorRules');
+                const newRule = document.createElement('div');
+                newRule.className = 'color-rule';
+                newRule.innerHTML = `
+                    <div class="color-sample" style="background-color: ${color};"></div>
+                    <span class="color-rule-text">${keyword}</span>
+                    <button onclick="removeColorRule(this)">Delete</button>
+                `;
+                colorRules.appendChild(newRule);
+
+                keywordInput.value = '';
+                colorInput.value = '#000000';
+
+                applyColorRules();
+            }
+        }
+
+        function removeColorRule(button) {
+            button.closest('.color-rule').remove();
+            applyColorRules();
+        }
+
+        function applyColorRules() {
+            const colorRules = document.querySelectorAll('.color-rule');
+            const playerItems = document.querySelectorAll('.player-item');
+
+            playerItems.forEach(player => {
+                player.style.backgroundColor = DEFAULT_PLAYER_COLOR;
+                const title = player.querySelector('.player-title');
+                if (title) {
+                    colorRules.forEach(rule => {
+                        const keyword = rule.querySelector('.color-rule-text').textContent.toLowerCase();
+                        const color = rule.querySelector('.color-sample').style.backgroundColor;
+                        if (keyword && title.textContent.toLowerCase().includes(keyword)) {
+                            player.style.backgroundColor = color;
+                        }
+                    });
+                }
+            });
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const playerItems = document.querySelectorAll('.player-item');
+
+            playerItems.forEach(player => {
+                const name = player.querySelector('.player-name').textContent.toLowerCase();
+                const title = player.querySelector('.player-title')?.textContent.toLowerCase() || '';
+                if (name.includes(searchTerm) || title.includes(searchTerm)) {
+                    player.style.display = '';
+                } else {
+                    player.style.display = 'none';
+                }
+            });
+        });
+
+        // Initialize Sortable for the player pool
+        new Sortable(document.getElementById('playerPool'), {
+            group: 'shared',
+            animation: 150
+        });
+    </script>
+</body>
+</html>
