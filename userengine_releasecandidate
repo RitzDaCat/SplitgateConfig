@@ -1,5 +1,6 @@
 [systemSettings]
-; VERSION 7/30/2024
+; VERSION 1.1A - 8/11/2024
+; Fixed networking related issues.
 ; CORE LATENCY CHANGES 
 r.OneFrameThreadLag=0 ; no lagging behind by 1 thread
 r.FinishCurrentFrame=0 ; better latency but lower throughput
