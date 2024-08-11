@@ -58,7 +58,6 @@ r.DefaultFeature.AntiAliasing=0
 net.IpConnectionUseSendTasks=1 ;decouples networking from the main thread for better multicore
 net.IpNetDriverUseReceiveThread=1 ; decouples networking receive
 net.DisableBandwithThrottling=1
-net.RecvMultiCapacity=4096
 ; COLOR
 r.Color.Mid = .5 ; slightly brighter
 [/Script/Engine.GarbageCollectionSettings]
