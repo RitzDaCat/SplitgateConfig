@@ -1,6 +1,5 @@
 [systemSettings]
-; VERSION 1.1A - 8/11/2024
-; Fixed networking related issues.
+; VERSION 7/30/2024
 ; CORE LATENCY CHANGES 
 r.OneFrameThreadLag=0 ; no lagging behind by 1 thread
 r.FinishCurrentFrame=0 ; better latency but lower throughput
@@ -17,8 +16,8 @@ r.RDG.AsyncCompute=2
 tick.AllowAsyncTickDispatch=1
 r.D3D12.ExecuteCommandListTask=1
 ; BETTER GRAPHICS?!
-r.BloomQuality=0 ; railgun and lights
-r.Bloom.Cross=0 ; Lights are brighter at source, looks just really cool lol
+r.BloomQuality=4 ; railgun and lights
+r.Bloom.Cross=3 ; Lights are brighter at source, looks just really cool lol
 r.ToneMapperFilm=1 ; better color depth
 r.Bloom.HalfResolutionFFT=1
 r.MipMapLodBias=1
@@ -50,6 +49,13 @@ FX.Niagara.QualityLevel=0
 r.Water.Enabled=0
 r.Water.SingleLayer.Reflection=0
 r.ParticleLightQuality=0 ; default was 2
+r.SeparateTranslucency=0 ; clean portals
+foliage.CullAll=1
+r.TessellationAdaptivePixelsPerTriangle=9999999 ;
+foliage.DensityScale=0
+grass.DensityScale=0
+r.TonemapperFilm=0
+r.SceneColorFringeQuality=0
 ; CHARACTER MOVEMENT
 a.URO.Enable=1
 ; AUDIO
