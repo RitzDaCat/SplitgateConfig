@@ -1,77 +1,128 @@
 [systemSettings]
-; VERSION 7/30/2024
-; CORE LATENCY CHANGES 
-r.OneFrameThreadLag=0 ; no lagging behind by 1 thread
-r.FinishCurrentFrame=0 ; better latency but lower throughput
-RHI.MaximumFrameLatency=1 ; max 1 frame latency
-d3d12.MaximumFrameLatency=1 ; max 1 frame latency
-r.TextureStreaming=0 ; no streaming to prevent stutters
-r.PostProcessing.ForceAsyncDispatch=1
-r.PostProcessing.PreferCompute=1
-r.ShaderPipelineCache.BatchSize=1
+; Version 8/17/2024
+; CHANGELOG
+; 8/17 - fixes to visual blooms, better animation rates across distances, performance is better, frame pacing fixes. Notations on items I did additional research on - Ritz
+; Multithreading - Async Processing
+r.ParallelShadows=1
 r.ParallelShadowsNonWholeScene=1
+FX.AllowAsyncTick=1
 FX.BatchAsync=1
-FX.EarlyScheduleAsync=1
+FX.EarlyScheduleAsync=0
 r.RDG.AsyncCompute=2
 tick.AllowAsyncTickDispatch=1
 r.D3D12.ExecuteCommandListTask=1
-; BETTER GRAPHICS?!
-r.BloomQuality=4 ; railgun and lights
-r.Bloom.Cross=3 ; Lights are brighter at source, looks just really cool lol
-r.ToneMapperFilm=1 ; better color depth
-r.Bloom.HalfResolutionFFT=1
+r.D3D12.AllowAsyncCompute=1
+r.EnableAsyncComputeTranslucencyLightingVolumeClear=1
+r.RHICmdAsyncRHIThreadDispatch=1
+r.Vulkan.AllowAsyncCompute=1
+RunAsyncTraceOnWorkerThread=1
+s.AsyncLoadingUseFullTimeLimit=1
+tick.AllowAsyncComponentTicks=1
+tick.AllowAsyncTickCleanup=1
+tick.AllowAsyncTickDispatch=1
+tick.DoAsyncEndOfFrameTasks=1
+
+; Multithreading - Frame Processing
+r.OneFrameThreadLag=0
+r.FinishCurrentFrame=1
+RHI.MaximumFrameLatency=1
+d3d12.MaximumFrameLatency=1
+
+; Rendering - Texture and Shader Processing
+r.TextureStreaming=0
+r.PostProcessing.PreferCompute=1
+r.ShaderPipelineCache.BatchSize=50
 r.MipMapLodBias=1
-; REDUCE VISUAL FIDELITY FOR PERFORMANCE
-r.ReflectionCaptureResolution=32 ; worse reflections 
-r.Shadow.MaxResolution=64 ; lower shadows
-r.ViewDistanceScale=.001 ; cuts out background BS
-r.Fog=0 ; no grey filter
-r.AllowLandscapeShadows-=0 ; no landscape shadows
-r.AllowSimpleLights=0
+
+; Rendering - Visual Quality
+r.BloomQuality=1
+r.ToneMapperFilm=1
+r.Bloom.HalfResolutionFFT=1
+
+; Rendering - Performance Optimization
+r.ReflectionEnvironment=0
+r.Shadow.MaxResolution=4
+r.ViewDistanceScale=1
+r.Fog=0
+r.VolumetricFog=0
+ShowFlag.Fog=0
+ShowFlag.VolumetricFog=0
+r.Atmosphere=0
+r.AllowLandscapeShadows-=0
 r.ToneMapper.Quality=0
-r.TranslucentLightingVolume=0
 r.SupportAllShaderPermutations=0
 r.supportAtmosphericFog=0
 r.SupportPointLightWholeSceneShadows=0
 r.SupportskyAtmosphere=0
+ShowFlag.Atmosphere=0
+ShowFlag.VisualizeSkyAtmosphere=0
 r.SwpportskyAtmosphereAffectsHeightFog=0
 R.SupportStationarySkylight=0
-FX.MaxCPUParticlesPerEmitter=100
-FX.MaxGPUParticlesSpawnedPerFrame=512
 r.EyeAdaptionQuality=0
 r.LightShaftDownSampleFactor=8
 r.HZBOcclusion=1
-r.EarlyZPass=2
-r.GTSyncType=0
-rhi.SyncSlackMS=0
+r.EarlyZPass=3
+r.GTSyncType=2 ; 0 - Sync the game thread with the render thread (default).1 - Sync the game thread with the RHI thread.2 - Sync the game thread with the GPU swap chain flip (only on supported platforms).
 r.DFShadowQuality=0
-FX.Niagara.QualityLevel=0
 r.Water.Enabled=0
 r.Water.SingleLayer.Reflection=0
-r.ParticleLightQuality=0 ; default was 2
-r.SeparateTranslucency=0 ; clean portals
+r.ParticleLightQuality=0
 foliage.CullAll=1
-r.TessellationAdaptivePixelsPerTriangle=9999999 ;
+r.TessellationAdaptivePixelsPerTriangle=9999999
 foliage.DensityScale=0
 grass.DensityScale=0
 r.TonemapperFilm=0
 r.SceneColorFringeQuality=0
-; CHARACTER MOVEMENT
-a.URO.Enable=1
-; AUDIO
-au.DisableOcclusion=1
-r.DefaultFeature.AntiAliasing=0
-; NETWORK
-net.IpConnectionUseSendTasks=1 ;decouples networking from the main thread for better multicore
-net.IpNetDriverUseReceiveThread=1 ; decouples networking receive
+r.DepthOfFieldQuality=0
+r.FastBlurThreshold=0
+r.GBufferFormat=0
+r.LensFlareQuality=0
+r.MaterialQualityLevel=0
+r.MaxAnisotropy=4
+r.ParticleLightQuality=0
+r.RefractionQuality=0
+r.PostProcessAAQuality=0
+r.SceneColorFormat=0
+r.SceneColorFringeQuality=0
+r.ShadowQuality=0
+r.SkyLightingQuality=0
+r.SSR.Quality=0
+sg.AntiAliasingQuality=0
+sg.EffectsQuality=0
+sg.FoliageQuality=0
+sg.PostProcessQuality=0
+sg.ShadingQuality=0
+sg.ShadowQuality=0
+sg.TextureQuality=0
+sg.ViewDistanceQuality=0
+r.DBuffer=0
+
+; Lighting 
+r.LightCulling.Quality=0
+r.LightFunctionQuality=0
+r.LightShaftQuality=0
+; Rendering - Particle Systems
+FX.MaxCPUParticlesPerEmitter=100
+FX.MaxGPUParticlesSpawnedPerFrame=512
+FX.Niagara.QualityLevel=0
+
+; Physics
+a.URO.Enable=0 ; All skeletal meshes will update their animations at the full frame rate, leading to consistent and smooth animations across the board, regardless of distance or importance.
+a.URO.DisableInterpolation=1 ; Disabling interpolation can reduce latency in animations because the game no longer has to calculate the in-between frames. This can be particularly beneficial in competitive games where every millisecond counts.
+a.URO.ForceAnimRate=50
+; Audio
+au.DisableOcclusion=1 ; Can hear better but can disable if you don't like
+au.RenderThreadPriority=1 ; 	Sets audio render thread priority. Defaults to 3. Normal, 1: Above Normal, 2: Below Normal, 3: Highest, 4: Lowest, 5: Slightly Below Normal, 6: Time Critical
+; Network
+net.IpConnectionUseSendTasks=1
+net.IpNetDriverUseReceiveThread=1
 net.DisableBandwithThrottling=1
-; COLOR
-r.Color.Mid = .5 ; slightly brighter
+
 [/Script/Engine.GarbageCollectionSettings]
-gc.CreateGCClusters=1 ; Enable creation of GC clusters for better parallelism
-gc.ActorClusteringEnabled=1 ; Enable actor clustering for GC
-gc.BlueprintClusteringEnabled=1 ; Enable blueprint clustering for GC
+gc.CreateGCClusters=1
+gc.ActorClusteringEnabled=1
+gc.BlueprintClusteringEnabled=1
 
 [Core.Log]
-LogStreamingRender=Error ; Less log IO
-LogSpawn=Warning; reduce log spam?
+LogStreamingRender=Error
+LogSpawn=Warning
